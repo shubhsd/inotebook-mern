@@ -25,8 +25,6 @@ const userSchema = new Schema({
 
 const User = mongoose.model('user', userSchema);
 
-User.createIndexes(); // To maintain uniqueness. This will help to get unique value for entry which have unique key associated to it here : email
-
 module.exports = User
 
 // Here mongoose.model takes 2 arguments - 1.) name of model 2.) schema name
