@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/User');
+
+const JWT_SECRET = 'Shubhamisagoodb$oy';
 
 // Create a user : using POST "/api/auth/createUser" . No login required
 
@@ -32,7 +36,21 @@ router.post('/createUser', [
             email: req.body.email,
             password: secPassword,
         })
-        res.json(user);
+
+        const data = {
+            user: {
+                id: user.id
+            }
+        }
+
+        const authToken = jwt.sign(data, JWT_SECRET);
+        // Here sign is synchronously signed(this can be known when we hover our mouse on sign. Therefore we need not require to add await with this or before this like we have done above for bcrypt methods)
+        // console.log(authToken);
+        // res.json(user);
+        res.json({ authToken });
+        // below method will also send same response
+        // res.json({ authToken: authToken });
+
     } catch (error) {
         console.log(error.message, '---------->>>>>>Error from auth.js fileF');
         res.status(500).send('Some error occured');
