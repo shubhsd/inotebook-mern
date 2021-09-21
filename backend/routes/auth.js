@@ -39,7 +39,6 @@ router.post('/createUser', checkSchema(registrationSchema), [
         if (user) {
             return res.status(400).json({ error: 'User with this email already exists' });
         }
-
         const salt = await bcrypt.genSalt(10);
         // Await added in both lines because these both methods are promise so until and unless these two promises are resolved we can't move further otherwise it will give error.
         const secPassword = await bcrypt.hash(req.body.password, salt);
@@ -49,13 +48,11 @@ router.post('/createUser', checkSchema(registrationSchema), [
             email: req.body.email,
             password: secPassword,
         })
-
         const data = {
             user: {
                 id: user.id
             }
         }
-
         const authToken = jwt.sign(data, JWT_SECRET);
         // Here sign is synchronously signed(this can be known when we hover our mouse on sign. Therefore we need not require to add await with this or before this like we have done above for bcrypt methods)
         // console.log(authToken);
