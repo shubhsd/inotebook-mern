@@ -4,7 +4,7 @@ const { body, checkSchema, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/User');
+const User = require('../models/User'); //Importing user model here
 const fetchUser = require('../middleware/fetchUser');
 
 const JWT_SECRET = 'Shubhamisagoodb$oy';
