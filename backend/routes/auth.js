@@ -5,10 +5,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+const fetchUser = require('../middleware/fetchUser');
 
 const JWT_SECRET = 'Shubhamisagoodb$oy';
 
-// Create a user : using POST "/api/auth/createUser" . No login required
+// ROUTE 1 : Create a user : using POST "/api/auth/createUser" . No login required
 
 const registrationSchema = {
     password: {
@@ -26,7 +27,7 @@ router.post('/createUser', checkSchema(registrationSchema), [
     body('name', 'Enter a valid name').isLength({ min: 3 }),
     body('password', 'Password must be atleast 8 characters').isLength({ min: 8 }),
     body('email', 'Enter a valid email').isEmail(),
-], async(req, res) => {
+], async (req, res) => {
     // Returns bad requests if there are errors 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,14 +70,11 @@ router.post('/createUser', checkSchema(registrationSchema), [
     }
 });
 
-// Authenticate a user : using POST "/api/auth/login" . No login required
-
-
-
+// ROUTE 2 : Authenticate a user : using POST "/api/auth/login" . No login required
 router.post('/login', [
     body('email', 'Email is required').isEmail(),
     body('password', 'Password cannot be blank').exists(),
-], async(req, res) => {
+], async (req, res) => {
     // Returns bad requests if there are errors 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -113,5 +111,19 @@ router.post('/login', [
         res.status(500).send('Internal server error');
     }
 });
+
+// ROUTE 3 : Get logged in user details : using POST "/api/auth/getUser" . Login required
+router.post('/getUser', fetchUser, async (req, res) => {
+    try {
+        userId = req.user.id;
+        const user = await User.findById(userId).select("-password");
+        // .select('-password') means get all fields except password
+        res.send(user);
+    } catch (error) {
+        console.log(error.message, '---------->>>>>>Error from auth.js file ---- getUSer api');
+        res.status(500).send('Internal server error');
+    }
+});
+
 
 module.exports = router;
