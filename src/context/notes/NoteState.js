@@ -65,8 +65,9 @@ const NoteState = (props) => {
         "class": "5b"
     }
 
-    const [notes, setnotes] = useState(notesInitial);
+    const [notes, setNotes] = useState(notesInitial);
     const [state, setstate] = useState(s1);
+
     const update = () => {
         setTimeout(() => {
             setstate({
@@ -75,8 +76,38 @@ const NoteState = (props) => {
             })
         }, 1000);
     };
+
+    // Add a note
+    const addNote = (title, description, tag) => {
+        // TODO : Api call
+        const note = {
+            "_id": "6149e4ac86a62a078cee5152",
+            "user": "6149c94d832073d216cbacc0",
+            "title": title,
+            "description": description,
+            "tag": tag,
+            "date": "2021-09-21T13:57:00.733Z",
+            "__v": 0
+        };
+
+        // concat returns an array whereas push updates an array so we can't use push like we have done below
+        // setNotes(notes.push(note));  //we cannot do this
+
+        setNotes(notes.concat(note));
+    };
+
+    // Delete a note
+    const deleteNote = () => {
+
+    };
+
+    // Edit a note
+    const editNote = () => {
+
+    };
+
     return (
-        <NoteContext.Provider value={{ notes, setnotes, state, update }}>
+        <NoteContext.Provider value={{ notes, setNotes, addNote, deleteNote, editNote, state, update }}>
             {props.children}
         </NoteContext.Provider>
     )
