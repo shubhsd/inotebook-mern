@@ -49,6 +49,7 @@ const NoteState = (props) => {
             body: JSON.stringify({ title, description, tag })
         });
         const json = response.json();
+        console.log(json);
 
 
         const note = {
@@ -68,8 +69,19 @@ const NoteState = (props) => {
     };
 
     // Delete a note
-    const deleteNote = (id) => {
+    const deleteNote = async (id) => {
         console.log('deleting a note with id' + id);
+        // API call 
+        const response = await fetch(`${host}/api/notes/deleteNote/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE0OWM5NGQ4MzIwNzNkMjE2Y2JhY2MwIn0sImlhdCI6MTYzMjIyNTYxM30.RVek6uhDVdyKKrrI02jJX-QLHVVy2xrnNhHqWnLLdWA'
+            },
+        });
+        const json = response.json();
+        console.log(json);
+
         const newNotes = notes.filter((note) => {
             return note._id !== id;
             // Means if note._id is not equal to id to be deleted then only it will remain in this array.
@@ -90,6 +102,7 @@ const NoteState = (props) => {
             body: JSON.stringify({ title, description, tag })
         });
         const json = response.json();
+        console.log(json);
 
         // Logic to edit in client
 
